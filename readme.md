@@ -20,3 +20,7 @@ cmake ..
 make
 make install
 ```
+
+## Example
+
+![SVG image of the qr code of the text Hello World!](example.svg "SVG image of the qr code of the text Hello World!")
