@@ -20,7 +20,7 @@ if (NAVISERVER)
     target_link_libraries(tqrcodegen PRIVATE ${TCL_LIBRARY} nsd nsthread)
     target_compile_options(tqrcodegen PRIVATE -DUSE_NAVISERVER)
     install(TARGETS ${TARGET}
-            LIBRARY DESTINATION ${NAVISERVER}/lib
+            LIBRARY DESTINATION ${NAVISERVER}/bin
     )
 else ()
     include_directories(${TCL_INCLUDE_PATH})
