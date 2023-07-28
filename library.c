@@ -1,9 +1,9 @@
+#include "library.h"
 #include <stdbool.h>
 #include "qrcodegen.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "library.h"
 
 #ifdef DEBUG
 # define DBG(x) x
