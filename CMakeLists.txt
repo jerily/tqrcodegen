@@ -3,13 +3,11 @@ project(tqrcodegen LANGUAGES CXX C)
 
 set(TARGET tqrcodegen)
 set(CMAKE_C_STANDARD   11)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED true)
 set(CMAKE_C_STANDARD_REQUIRED true)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_library(tqrcodegen SHARED library.c qrcodegen.c)
 set_target_properties(tqrcodegen PROPERTIES POSITION_INDEPENDENT_CODE ON)
