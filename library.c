@@ -17,6 +17,8 @@
                      return TCL_ERROR; \
                  }
 
+#define itoa(x) (Tcl_GetString(Tcl_NewIntObj(x)))
+
 static int           tqrcodegen_ModuleInitialized;
 
 static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
@@ -84,23 +86,23 @@ static Tcl_Obj *toSvgString(const uint8_t qrcode[], int border) {
                            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
                            "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n",
                            "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 ",
-                           (size + border * 2), " ", (size + border * 2), "\" stroke=\"none\">\n",
+                           itoa(size + border * 2), " ", itoa(size + border * 2), "\" stroke=\"none\">\n",
                            "\t<rect width=\"100%\" height=\"100%\" fill=\"#FFFFFF\"/>\n",
-                           "\t<path d=\"");
+                           "\t<path d=\"", NULL);
     for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
             if (qrcodegen_getModule(qrcode, x, y)) {
                 if (x != 0 || y != 0)
-                    Tcl_AppendStringsToObj(sb, " ", "M", (x + border), ",", (y + border), "h1v1h-1z");
+                    Tcl_AppendStringsToObj(sb, " ", "M", itoa(x + border), ",", itoa(y + border), "h1v1h-1z", NULL);
             }
         }
     }
-    Tcl_AppendStringsToObj(sb, "\" fill=\"#000000\"/>\n", "</svg>\n");
+    Tcl_AppendStringsToObj(sb, "\" fill=\"#000000\"/>\n", "</svg>\n", NULL);
     return sb;
 }
 
 static int tqrcodegen_EncodeToSvg(ClientData  clientData, Tcl_Interp *interp, int objc, Tcl_Obj * const objv[] ) {
-    DBG(fprintf(stderr,"GetEncodeToSvg\n"));
+    DBG(fprintf(stderr,"EncodeToSvg\n"));
 
     CheckArgs(2,2,1,"text");
     uint8_t qr0[qrcodegen_BUFFER_LEN_MAX];
