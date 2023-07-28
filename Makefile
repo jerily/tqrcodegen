@@ -14,4 +14,6 @@ MODOBJS     = library.o qrcodegen.o
 
 MODLIBS  +=
 
+CFLAGS += -DUSE_NAVISERVER
+
 include  $(NAVISERVER)/include/Makefile.module
