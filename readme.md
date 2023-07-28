@@ -11,12 +11,30 @@ TCL/C extension for generating QR codes as SVG images
 
 
 ## Build the library 
+For Tcl
 ```
 git clone https://github.com/jerily/tqrcodegen.git
 cd tqrcodegen
 mkdir build
 cd build
 cmake ..
+make
+make install
+```
+For NaviServer (using cmake)
+```
+git clone https://github.com/jerily/tqrcodegen.git
+cd tqrcodegen
+mkdir build
+cd build
+cmake .. -DNAVISERVER=/usr/local/ns
+make
+make install
+```
+For NaviServer (using Makefile)
+```
+git clone https://github.com/jerily/tqrcodegen.git
+cd tqrcodegen
 make
 make install
 ```
