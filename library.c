@@ -76,9 +76,7 @@ char *base64_encode(const unsigned char *data,
 // of border modules. The string always uses Unix newlines (\n), regardless of the platform.
 static Tcl_Obj *toSvgString(const uint8_t qrcode[], int border) {
     int size = qrcodegen_getSize(qrcode);
-    if (border < 0)
-        return NULL;
-    if (border > INT_MAX / 2 || border * 2 > INT_MAX - size)
+    if (border * 2 > INT_MAX - size)
         return NULL;
 
     Tcl_Obj *sb = Tcl_NewObj();
@@ -107,8 +105,8 @@ static int tqrcodegen_EncodeToSvg(ClientData  clientData, Tcl_Interp *interp, in
     CheckArgs(2,2,1,"text");
     uint8_t qr0[qrcodegen_BUFFER_LEN_MAX];
     uint8_t tempBuffer[qrcodegen_BUFFER_LEN_MAX];
-    bool ok = qrcodegen_encodeText("Hello, world!",
-                                   tempBuffer, qr0, qrcodegen_Ecc_MEDIUM,
+    bool ok = qrcodegen_encodeText(Tcl_GetString(objv[1]),
+                                   tempBuffer, qr0, qrcodegen_Ecc_HIGH,
                                    qrcodegen_VERSION_MIN, qrcodegen_VERSION_MAX,
                                    qrcodegen_Mask_AUTO, true);
     if (ok) {
