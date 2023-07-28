@@ -15,9 +15,6 @@ set_target_properties(tqrcodegen PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(${CMAKE_CURRENT_LIST_DIR}/FindTCL.cmake)
 
-message(STATUS "TCL_LIBRARY: ${TCL_LIBRARY}")
-message(STATUS "TCL_INCLUDE_PATH: ${TCL_INCLUDE_PATH}")
-
 if (NAVISERVER)
     include_directories(${NAVISERVER}/include)
     target_link_directories(tqrcodegen PRIVATE ${NAVISERVER}/lib)
