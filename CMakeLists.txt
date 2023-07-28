@@ -11,7 +11,7 @@ find_package(Threads REQUIRED)
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-add_library(tqrcodegen SHARED library.cc qrcodegen.cpp)
+add_library(tqrcodegen SHARED library.c qrcodegen.c)
 set_target_properties(tqrcodegen PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(${CMAKE_CURRENT_LIST_DIR}/FindTCL.cmake)

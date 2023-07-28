@@ -5,13 +5,13 @@ endif
 #
 # Module name
 #
-MOD      =  libtmfa.so
+MOD      =  libtqrcodegen.so
 
 #
 # Objects to build.
 #
-MODOBJS     = library.o
+MODOBJS     = library.o qrcodegen.o
 
-MODLIBS  += -lcotp
+MODLIBS  +=
 
 include  $(NAVISERVER)/include/Makefile.module
