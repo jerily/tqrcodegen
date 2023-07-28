@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(tqrcodegen LANGUAGES CXX C)
+project(tqrcodegen LANGUAGES C)
 
 set(TARGET tqrcodegen)
 set(CMAKE_C_STANDARD   11)
