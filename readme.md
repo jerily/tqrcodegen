@@ -21,16 +21,6 @@ cmake ..
 make
 make install
 ```
-For NaviServer (using cmake)
-```
-git clone https://github.com/jerily/tqrcodegen.git
-cd tqrcodegen
-mkdir build
-cd build
-cmake .. -DNAVISERVER=/usr/local/ns
-make
-make install
-```
 For NaviServer (using Makefile)
 ```
 git clone https://github.com/jerily/tqrcodegen.git
