@@ -1,0 +1,3 @@
+set dir [file dirname [info script]]
+
+package ifneeded tqrcodegen @PROJECT_VERSION@ [list load [file join $dir libtqrcodegen[info sharedlibextension]]]

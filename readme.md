@@ -17,7 +17,9 @@ git clone https://github.com/jerily/tqrcodegen.git
 cd tqrcodegen
 mkdir build
 cd build
-cmake ..
+cmake .. \
+  -DTCL_LIBRARY_DIR=/usr/local/lib \
+  -DTCL_INCLUDE_DIR=/usr/local/include
 make
 make install
 ```

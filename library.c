@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#define XSTR(s) STR(s)
+#define STR(s) #s
+
 #ifdef DEBUG
 # define DBG(x) x
 #else
@@ -142,7 +145,7 @@ int Tqrcodegen_Init(Tcl_Interp *interp) {
     Tcl_CreateNamespace(interp, "::tqrcodegen", NULL, NULL);
     Tcl_CreateObjCommand(interp, "::tqrcodegen::encode_to_svg", tqrcodegen_EncodeToSvg, NULL, NULL);
 
-    return Tcl_PkgProvide(interp, "tqrcodegen", "0.1");
+    return Tcl_PkgProvide(interp, "tqrcodegen", XSTR(PROJECT_VERSION));
 }
 
 #ifdef USE_NAVISERVER
