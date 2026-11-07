@@ -1,0 +1,66 @@
+package require tcltest 2
+namespace import ::tcltest::*
+
+test package-1.1 {package version} -body {
+    package require tqrcodegen 1.1
+} -result 1.1.0
+
+test svg-1.1 {valid SVG with a four-module quiet zone} -body {
+    set svg [::tqrcodegen::encode_to_svg HELLO]
+    list [string match {<?xml*} $svg] \
+        [regexp {viewBox="0 0 29 29"} $svg] \
+        [string match {*<path d="*" fill="#000000"/>*} $svg]
+} -result {1 1 1}
+
+test svg-1.2 {all modules in the top-left finder pattern are present} -body {
+    set svg [::tqrcodegen::encode_to_svg HELLO]
+    set modules [regexp -all -inline {M[0-9]+,[0-9]+h1v1h-1z} $svg]
+    set valid 1
+    for {set y 0} {$y < 7} {incr y} {
+        for {set x 0} {$x < 7} {incr x} {
+            set expected [expr {$x == 0 || $x == 6 || $y == 0 || $y == 6 ||
+                ($x >= 2 && $x <= 4 && $y >= 2 && $y <= 4)}]
+            set module M[expr {$x + 4}],[expr {$y + 4}]h1v1h-1z
+            if {($module in $modules) != $expected} {set valid 0}
+        }
+    }
+    set valid
+} -result 1
+
+test svg-1.3 {empty text is supported} -body {
+    regexp {viewBox="0 0 29 29"} [::tqrcodegen::encode_to_svg {}]
+} -result 1
+
+test svg-1.4 {text never becomes SVG markup} -body {
+    string match {*<script>*} [::tqrcodegen::encode_to_svg {<script>alert(1)</script>}]
+} -result 0
+
+test errors-1.1 {missing argument} -body {
+    ::tqrcodegen::encode_to_svg
+} -returnCodes error -match glob -result {wrong # args:*text*}
+
+test errors-1.2 {extra argument} -body {
+    ::tqrcodegen::encode_to_svg hello world
+} -returnCodes error -match glob -result {wrong # args:*text*}
+
+test errors-1.3 {capacity errors have a useful message} -body {
+    ::tqrcodegen::encode_to_svg [string repeat a 10000]
+} -returnCodes error -errorCode {TQRCODEGEN CAPACITY} -result {text is too long for a QR code}
+
+test interp-1.1 {load in independent interpreters} -body {
+    set extension [lindex [lindex [info loaded] 0] 0]
+    set expected [::tqrcodegen::encode_to_svg HELLO]
+    set valid 1
+    for {set i 0} {$i < 5} {incr i} {
+        set child [interp create]
+        try {
+            $child eval [list load $extension Tqrcodegen]
+            if {[$child eval {::tqrcodegen::encode_to_svg HELLO}] ne $expected} {set valid 0}
+        } finally {
+            interp delete $child
+        }
+    }
+    set valid
+} -result 1
+
+cleanupTests
