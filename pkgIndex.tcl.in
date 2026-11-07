@@ -1,3 +1,2 @@
 set dir [file dirname [info script]]
-
-package ifneeded tqrcodegen @PROJECT_VERSION@ [list load [file join $dir libtqrcodegen[info sharedlibextension]]]
+package ifneeded tqrcodegen @PROJECT_VERSION@ [list load [file join $dir @CMAKE_SHARED_LIBRARY_PREFIX@tqrcodegen@CMAKE_SHARED_LIBRARY_SUFFIX@] Tqrcodegen]
