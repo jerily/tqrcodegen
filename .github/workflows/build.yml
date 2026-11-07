@@ -1,0 +1,52 @@
+name: Build
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        tcl: ['8.6', '9.1']
+        shared: ['ON', 'OFF']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tcl 8.6
+        if: matrix.tcl == '8.6'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tcl8.6-dev
+          echo 'TCL_INCLUDE_DIR=/usr/include/tcl8.6' >> "$GITHUB_ENV"
+          echo 'TCL_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu' >> "$GITHUB_ENV"
+      - name: Build Tcl 9.1
+        if: matrix.tcl == '9.1'
+        run: |
+          git clone --depth 1 --branch core-9-1-0 https://github.com/tcltk/tcl.git "$RUNNER_TEMP/tcl"
+          cd "$RUNNER_TEMP/tcl/unix"
+          ./configure --prefix="$RUNNER_TEMP/tcl-install"
+          make -j2
+          make install
+          echo "TCL_INCLUDE_DIR=$RUNNER_TEMP/tcl-install/include" >> "$GITHUB_ENV"
+          echo "TCL_LIBRARY_DIR=$RUNNER_TEMP/tcl-install/lib" >> "$GITHUB_ENV"
+      - name: Build and test
+        env:
+          SHARED: ${{ matrix.shared }}
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+            -DTCL_INCLUDE_DIR="$TCL_INCLUDE_DIR" -DTCL_LIBRARY_DIR="$TCL_LIBRARY_DIR" \
+            -DBUILD_SHARED_LIBS="$SHARED" -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/install"
+          cmake --build build --parallel 2
+          ctest --test-dir build --output-on-failure
+          cmake --install build
+      - name: Verify stub linkage
+        if: matrix.shared == 'ON'
+        run: |
+          if readelf -d build/libtqrcodegen.so | grep -E 'NEEDED.*libtcl'; then
+            echo 'Shared extension links the Tcl runtime directly'
+            exit 1
+          fi
+          if nm -u build/libtqrcodegen.so | grep -E ' (Tcl_|tclStubsPtr)'; then
+            echo 'Shared extension has unresolved Tcl symbols'
+            exit 1
+          fi
