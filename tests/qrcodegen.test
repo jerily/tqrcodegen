@@ -3,7 +3,7 @@ namespace import ::tcltest::*
 
 test package-1.1 {package version} -body {
     package require tqrcodegen 1.1
-} -result 1.1.0
+} -result 1.1.1
 
 test svg-1.1 {valid SVG with a four-module quiet zone} -body {
     set svg [::tqrcodegen::encode_to_svg HELLO]
