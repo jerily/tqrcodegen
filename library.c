@@ -5,7 +5,7 @@
 #define XSTR(s) STR(s)
 #define STR(s) #s
 #ifndef PROJECT_VERSION
-#define PROJECT_VERSION 1.1.0
+#define PROJECT_VERSION 1.1.1
 #endif
 
 #if TCL_MAJOR_VERSION < 9
